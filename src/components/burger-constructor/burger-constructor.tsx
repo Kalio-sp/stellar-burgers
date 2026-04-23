@@ -1,10 +1,12 @@
-import { FC, useMemo, useState } from 'react';
+import { FC, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { BurgerConstructorUI } from '@ui';
 import { useDispatch, useSelector } from '../../services/store';
 import { clearConstructor } from '../../services/slices/constructorSlice';
-import { orderBurgerApi } from '../../utils/burger-api';
-import { TOrder } from '../../utils/types';
+import {
+  clearOrderModalData,
+  createOrder
+} from '../../services/slices/orderSlice';
 
 export const BurgerConstructor: FC = () => {
   const navigate = useNavigate();
@@ -17,8 +19,8 @@ export const BurgerConstructor: FC = () => {
   );
   const user = useSelector((state) => state.user.user);
 
-  const [orderRequest, setOrderRequest] = useState(false);
-  const [orderModalData, setOrderModalData] = useState<TOrder | null>(null);
+  const orderRequest = useSelector((state) => state.order.orderRequest);
+  const orderModalData = useSelector((state) => state.order.orderModalData);
 
   const constructorItems = {
     bun,
@@ -33,37 +35,21 @@ export const BurgerConstructor: FC = () => {
       return;
     }
 
-    try {
-      setOrderRequest(true);
+    const ingredientIds = [
+      bun._id,
+      ...ingredients.map((item) => item._id),
+      bun._id
+    ];
 
-      const ingredientIds = [
-        bun._id,
-        ...ingredients.map((item) => item._id),
-        bun._id
-      ];
+    const resultAction = await dispatch(createOrder(ingredientIds));
 
-      const data = await orderBurgerApi(ingredientIds);
-
-      setOrderModalData({
-        _id: data.order._id,
-        status: data.order.status,
-        name: data.order.name,
-        createdAt: data.order.createdAt,
-        updatedAt: data.order.updatedAt,
-        number: data.order.number,
-        ingredients: ingredientIds
-      });
-
+    if (createOrder.fulfilled.match(resultAction)) {
       dispatch(clearConstructor());
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setOrderRequest(false);
     }
   };
 
   const closeOrderModal = () => {
-    setOrderModalData(null);
+    dispatch(clearOrderModalData());
   };
 
   const price = useMemo(

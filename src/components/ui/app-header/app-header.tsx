@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { NavLink } from 'react-router-dom';
+import clsx from 'clsx';
 import styles from './app-header.module.css';
 import { TAppHeaderUIProps } from './type';
 import {
@@ -17,7 +18,12 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => (
           {({ isActive }) => (
             <>
               <BurgerIcon type={isActive ? 'primary' : 'secondary'} />
-              <p className='text text_type_main-default ml-2 mr-10'>
+              <p
+                className={clsx(
+                  'text text_type_main-default ml-2 mr-10',
+                  isActive ? styles.link_active : styles.link_inactive
+                )}
+              >
                 Конструктор
               </p>
             </>
@@ -28,7 +34,14 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => (
           {({ isActive }) => (
             <>
               <ListIcon type={isActive ? 'primary' : 'secondary'} />
-              <p className='text text_type_main-default ml-2'>Лента заказов</p>
+              <p
+                className={clsx(
+                  'text text_type_main-default ml-2',
+                  isActive ? styles.link_active : styles.link_inactive
+                )}
+              >
+                Лента заказов
+              </p>
             </>
           )}
         </NavLink>
@@ -45,7 +58,12 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => (
           {({ isActive }) => (
             <>
               <ProfileIcon type={isActive ? 'primary' : 'secondary'} />
-              <p className='text text_type_main-default ml-2'>
+              <p
+                className={clsx(
+                  'text text_type_main-default ml-2',
+                  isActive ? styles.link_active : styles.link_inactive
+                )}
+              >
                 {userName || 'Личный кабинет'}
               </p>
             </>
