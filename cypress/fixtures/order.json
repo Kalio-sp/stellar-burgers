@@ -1,0 +1,12 @@
+{
+  "success": true,
+  "name": "Space флюоресцентный бургер",
+  "order": {
+    "_id": "order-1",
+    "status": "done",
+    "name": "Space флюоресцентный бургер",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z",
+    "number": 12345
+  }
+}
